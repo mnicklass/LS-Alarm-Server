@@ -67,3 +67,11 @@ const port = process.env.PORT || 3000;
 
 // sslServer.listen(port, () => console.log(`Listening on port ${port}...`))
 app.listen(port, () => console.log(`Listening on port ${port}...`));
+
+
+/*  
+    Commit changes to git and to code pipeline on aws:
+    git add .
+    git commit -m '*commit comment'
+    git push origin main
+*/
