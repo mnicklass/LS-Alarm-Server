@@ -17,10 +17,10 @@ const password = 'n060895sdd180994r' // Password for 'Alarm-Server-Authenticatio
 
 const webhooks = new Datastore('webhooks.db'); // database where the webhooks potentially get stored, maybe unneccessary 
 webhooks.loadDatabase();
-const alarms = new Datastore('alarms.db');
+
+const alarms = new Datastore('alarms.db'); // new Database for alarms, that will cross reference with webhooks.db 
 alarms.loadDatabase();
 
-// create new Database for alarms, that will cross reference with webhooks.db 
 
 app.get('/', (req, res) =>{
     res.send('Hello World');
@@ -67,8 +67,16 @@ app.post('/api/webhooks', (req, res) =>{
     webhooks.insert(webhook);
     res.send(webhook);
     // Insert here: check if shop && product_id in alarm, if yes check if webhook inventory <= alarm inventory, if yes send nodemail
-    }
-});
+    alarms.find({admin_graphql_api_id: req.body.prodcut_id}, (err, docs) => {
+        if(err){
+            console.log('An error has occurred, ', err);
+            return res.status(404).send('The alarm was not found!')
+        }else if (docs.length === 1){
+            console.log(docs['quantity']);
+        }
+    })  
+}});
+
 
 app.delete('/api/webhooks/:id', (req, res) => {
     if(req.header('Alarm-Server-Authentication')!== password){
@@ -95,6 +103,22 @@ app.post('/api/alarms', (req, res) =>{
     res.send(alarm);
     }
 });
+
+app.delete('/api/alarms/:productid', (req, res) =>{
+    if(req.header('Alarm-Server-Authentication')!== password){
+        res.status(401).send('You are not authorized to make this request!')
+    }else{
+        alarms.remove({product_id: req.body.product_id},{}, (err, numRemoved) => {
+            if(err){
+               console.log('An error has occurred, ', err);
+               return res.status(404).send('The alarm ID was not found!')
+            }else{
+                return res.send(`${numRemoved} Alarm with ID: ${req.body.product_id} has been deleted`);
+            }
+        })
+    }
+});
+
 
 // put, get?, delete request for api/alarms
 
