@@ -45,7 +45,7 @@ app.get('/api/webhooks', (req, res) => {
 });
 
 app.get('/api/webhooks/:id', (req, res) => {
-   webhooks.find({id: req.body.id},(err, docs) => {
+   webhooks.find({id: req.params.id},(err, docs) => {
        if(err){
           console.log('An error has occurred, ', err);
           return res.status(404).send('The webhook ID was not found!')
@@ -72,7 +72,7 @@ app.post('/api/webhooks', (req, res) =>{
             console.log('An error has occurred, ', err);
             return res.status(404).send('The alarm was not found!')
         }else if (docs.length === 1){
-            console.log(docs['quantity']);
+            res.send(docs['quantity']);
         }
     })  
 });
