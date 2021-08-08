@@ -44,8 +44,8 @@ app.get('/api/webhooks', (req, res) => {
     });
 });
 
-app.get('/api/webhooks/:procuct_id', (req, res) => {
-   webhooks.find({product_id: req.params.product_id},(err, docs) => {
+app.get('/api/webhooks/:id', (req, res) => {
+   webhooks.find({id: parseInt(req.params.id)},(err, docs) => {
        if(err){
           console.log('An error has occurred, ', err);
           return res.status(404).send('The webhook ID was not found!')
@@ -53,16 +53,16 @@ app.get('/api/webhooks/:procuct_id', (req, res) => {
         if(req.header('Alarm-Server-Authentication')!== password){
             res.status(401).send('You are not authorized to make this request!')
         }else{
-           return res.send(docs);
+           return res.send(docs[0]["variants"][0]["inventory_quantity"]);
         }
        }
    })
 });
 
 app.post('/api/webhooks', (req, res) =>{ 
-    /* if(req.header('Alarm-Server-Authentication')!== password){
+    if(req.header('Alarm-Server-Authentication')!== password){
         res.status(401).send('You are not authorized to make this request!')
-    }else{ */
+    }else{
     const webhook = req.body; 
     webhooks.insert(webhook);
     res.send(webhook, 'These are the headers: ', req.headers);
@@ -75,13 +75,13 @@ app.post('/api/webhooks', (req, res) =>{
             res.send(docs['quantity']);
         }
     })  
-});
+}});
 
 
 app.delete('/api/webhooks/:procuct_id', (req, res) => {
-    /* if(req.header('Alarm-Server-Authentication')!== password){
+    if(req.header('Alarm-Server-Authentication')!== password){
         res.status(401).send('You are not authorized to make this request!')
-    }else{ */
+    }else{
     webhooks.remove({id: req.params.product_id},{}, (err, numRemoved) => {
         if(err){
            console.log('An error has occurred, ', err);
@@ -91,7 +91,7 @@ app.delete('/api/webhooks/:procuct_id', (req, res) => {
         }
     })
     }
-    );
+});
 
 
 app.post('/api/alarms', (req, res) =>{
@@ -134,3 +134,5 @@ app.listen(port, () => console.log(`Listening on port ${port}...`));
     git commit -m '*commit comment'
     git push origin main
 */
+
+// docs[0]["variants"][0]["inventory_quantity"] getting inventory quantity
