@@ -82,12 +82,12 @@ app.delete('/api/webhooks/:id', (req, res) => {
     /* if(req.header('Alarm-Server-Authentication')!== password){
         res.status(401).send('You are not authorized to make this request!')
     }else{ */
-    webhooks.remove({id: req.body.id},{}, (err, numRemoved) => {
+    webhooks.remove({id: req.params.id},{}, (err, numRemoved) => {
         if(err){
            console.log('An error has occurred, ', err);
            return res.status(404).send('The webhook ID was not found!')
         }else{
-            return res.send(`${numRemoved} Webhook with ID: ${req.body.id} has been deleted`, 'These are the headers: ', req.headers);
+            return res.send(`${numRemoved} Webhook with ID: ${req.params.id} has been deleted`, 'These are the headers: ', req.headers);
         }
     })
     }
