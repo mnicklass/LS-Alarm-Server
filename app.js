@@ -60,9 +60,9 @@ app.get('/api/webhooks/:id', (req, res) => {
 });
 
 app.post('/api/webhooks', (req, res) =>{ 
-    if(req.headers(['Alarm-Server-Authentication'])!== password){
+    /* if(req.headers(['Alarm-Server-Authentication'])!== password){
         res.status(401).send('You are not authorized to make this request!')
-    }else{
+    }else{ */
     const webhook = req.body; 
     webhooks.insert(webhook);
     res.send(webhook, 'These are the headers: ', req.headers);
@@ -75,13 +75,13 @@ app.post('/api/webhooks', (req, res) =>{
             res.send(docs['quantity']);
         }
     })  
-}});
+});
 
 
 app.delete('/api/webhooks/:procuct_id', (req, res) => {
-    if(req.headers(['Alarm-Server-Authentication'])!== password){
+    /* if(req.headers(['Alarm-Server-Authentication'])!== password){
         res.status(401).send('You are not authorized to make this request!')
-    }else{
+    }else{ */
     webhooks.remove({id: req.params.product_id},{}, (err, numRemoved) => {
         if(err){
            console.log('An error has occurred, ', err);
@@ -91,7 +91,7 @@ app.delete('/api/webhooks/:procuct_id', (req, res) => {
         }
     })
     }
-});
+);
 
 
 app.post('/api/alarms', (req, res) =>{
