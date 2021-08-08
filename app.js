@@ -44,8 +44,8 @@ app.get('/api/webhooks', (req, res) => {
     });
 });
 
-app.get('/api/webhooks/:id', (req, res) => {
-   webhooks.find({id: req.params.id},(err, docs) => {
+app.get('/api/webhooks/:procuct_id', (req, res) => {
+   webhooks.find({product_id: req.params.product_id},(err, docs) => {
        if(err){
           console.log('An error has occurred, ', err);
           return res.status(404).send('The webhook ID was not found!')
@@ -71,18 +71,18 @@ app.post('/api/webhooks', (req, res) =>{
         if(err){
             console.log('An error has occurred, ', err);
             return res.status(404).send('The alarm was not found!')
-        }else if (docs.length === 1){
+        }else{
             res.send(docs['quantity']);
         }
     })  
 });
 
 
-app.delete('/api/webhooks/:id', (req, res) => {
+app.delete('/api/webhooks/:procuct_id', (req, res) => {
     /* if(req.header('Alarm-Server-Authentication')!== password){
         res.status(401).send('You are not authorized to make this request!')
     }else{ */
-    webhooks.remove({id: req.params.id},{}, (err, numRemoved) => {
+    webhooks.remove({id: req.params.product_id},{}, (err, numRemoved) => {
         if(err){
            console.log('An error has occurred, ', err);
            return res.status(404).send('The webhook ID was not found!')
@@ -104,7 +104,7 @@ app.post('/api/alarms', (req, res) =>{
     }
 });
 
-app.delete('/api/alarms/:productid', (req, res) =>{
+app.delete('/api/alarms/:product_id', (req, res) =>{
     if(req.header('Alarm-Server-Authentication')!== password){
         res.status(401).send('You are not authorized to make this request!')
     }else{
